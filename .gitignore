@@ -39,3 +39,6 @@ dist/**/*
 
 # ignore yarn.lock
 yarn.lock
+
+/ssl/server-*.pem
+tsconfig.build.tsbuildinfo
