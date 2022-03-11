@@ -1,0 +1,13 @@
+version: '2.1'
+
+services:
+  homelabot:
+    build: .
+    ports:
+      - 8443:8443
+    environment:
+      TELEGRAM_TOKEN: 1234567890:xxxxxxxxxxxxxxxxxxxxxxxx
+      EXTERNAL_ADDRESS: https://myserver.mydomain.com:8443
+      PORT: 8443
+      IPMI_URL: https://ipmi.mydomain.com
+      IPMI_CREDENTIALS: username:password

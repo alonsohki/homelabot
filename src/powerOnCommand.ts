@@ -8,8 +8,8 @@ const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
 });
 
-const serverUrl = ensureEnv('SERVER_URL');
-const [username, password] = ensureEnv('SERVER_CREDENTIALS').split(':');
+const ipmiUrl = ensureEnv('IPMI_URL');
+const [username, password] = ensureEnv('IPMI_CREDENTIALS').split(':');
 
 export default async (
   _me: TelegramBot.User,
@@ -17,7 +17,7 @@ export default async (
   msg: TelegramBot.Message
 ) => {
   bot.sendMessage(msg.chat.id, 'Encendiendo el servidor...');
-  const loginRequest = await fetch(`${serverUrl}/api/session`, {
+  const loginRequest = await fetch(`${ipmiUrl}/api/session`, {
     method: 'post',
     body: QS.stringify({ username, password, certlogin: 0 }),
     agent: httpsAgent,
@@ -32,7 +32,7 @@ export default async (
   const response = await loginRequest.json();
   const { CSRFToken } = response;
 
-  const powerOnRequest = await fetch(`${serverUrl}/api/actions/power`, {
+  const powerOnRequest = await fetch(`${ipmiUrl}/api/actions/power`, {
     method: 'post',
     body: JSON.stringify({ power_command: 1 }),
     agent: httpsAgent,
