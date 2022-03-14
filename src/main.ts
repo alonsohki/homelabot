@@ -26,8 +26,6 @@ bot.setWebHook(`${externalAddress}/bot${token}`, {
   }
 
   bot.on('message', async (msg) => {
-    if (msg.text?.startsWith('@' + me.username)) {
-      await commands(me, bot, msg);
-    }
+    await commands(me, bot, msg);
   });
 })();

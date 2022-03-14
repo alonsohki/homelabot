@@ -1,5 +1,30 @@
 import TelegramBot from 'node-telegram-bot-api';
-import powerOnCommand from './powerOnCommand';
+import hola from '~/commands/hola';
+import powerOn from '~/commands/powerOn';
+
+export type Command = {
+  validateCommand: (me: TelegramBot.User, command: string) => boolean;
+  validateText: (me: TelegramBot.User, text: string) => boolean;
+  run: (
+    me: TelegramBot.User,
+    bot: TelegramBot,
+    msg: TelegramBot.Message
+  ) => Promise<void>;
+};
+
+const parseBotDirectCommand = (
+  me: TelegramBot.User,
+  msg: TelegramBot.Message
+): string | null => {
+  const text = msg.text;
+  if (!text || text.length === 0) return null;
+
+  const regex = new RegExp(`^\/(?<command>.+)@${me.username}$`);
+  const match = text.match(regex);
+  return match?.groups.command || null;
+};
+
+const commands: Command[] = [hola, powerOn];
 
 export default async (
   me: TelegramBot.User,
@@ -8,11 +33,14 @@ export default async (
 ): Promise<void> => {
   if (!msg.text) return;
 
-  const text = msg.text.substring(2 + me.username.length);
+  const text = msg.text.substring(2 + me.username.length).toLowerCase();
+  const directCommand = parseBotDirectCommand(me, msg)?.toLowerCase();
 
-  if (text.toLocaleLowerCase() === 'hola') {
-    bot.sendMessage(msg.chat.id, `¡Hola @${msg.from.username}!`);
-  } else if (text.toLocaleLowerCase().includes('enciende el servidor')) {
-    await powerOnCommand(me, bot, msg);
-  }
+  commands
+    .filter(
+      (cmd) =>
+        cmd.validateText(me, text) ||
+        (directCommand && cmd.validateCommand(me, directCommand))
+    )
+    .forEach((cmd) => cmd.run(me, bot, msg));
 };
