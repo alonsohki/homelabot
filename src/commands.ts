@@ -20,7 +20,7 @@ const parseBotDirectCommand = (
   const text = msg.text;
   if (!text || text.length === 0) return null;
 
-  const regex = new RegExp(`^\/(?<command>.+)@${me.username}$`);
+  const regex = new RegExp(`^\/(?<command>.+?)(@${me.username})?$`);
   const match = text.match(regex);
   return match?.groups.command || null;
 };
