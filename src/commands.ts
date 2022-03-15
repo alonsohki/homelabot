@@ -1,6 +1,7 @@
 import TelegramBot from 'node-telegram-bot-api';
 import hola from '~/commands/hola';
 import powerOn from '~/commands/powerOn';
+import dice from './commands/dice';
 
 export type Command = {
   validateCommand: (me: TelegramBot.User, command: string) => boolean;
@@ -24,7 +25,7 @@ const parseBotDirectCommand = (
   return match?.groups.command || null;
 };
 
-const commands: Command[] = [hola, powerOn];
+const commands: Command[] = [hola, dice, powerOn];
 
 export default async (
   me: TelegramBot.User,
