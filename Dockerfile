@@ -4,9 +4,9 @@ FROM node:16-alpine
 WORKDIR /usr/src/app
 
 COPY package*.json tsconfig*.json ./
-COPY src ./src
-
 RUN npm ci --ignore-scripts
+
+COPY src ./src
 RUN npm run build
 
 # Generate the final image
